@@ -6,6 +6,7 @@ import {
   filterContacts,
 } from 'redux/operations';
 import { selectContacts, selectFilter } from 'redux/selectors';
+import { Loader } from 'components/Loader/Loader';
 import {
   ContactList,
   ContactListItem,
@@ -24,7 +25,7 @@ export const Contacts = () => {
     if (filter === '') {
       dispatch(fetchContacts());
     } else {
-      dispatch(filterContacts(filter));
+      dispatch(filterContacts(filter.toLowerCase()));
     }
   }, [dispatch, filter]);
   
@@ -34,7 +35,7 @@ export const Contacts = () => {
 
   return (
     <ContactList>
-      {isLoading && <b>Loading contacts...</b>}
+      {isLoading && <Loader/>}
       {error && <b>{error}</b>}
       {items.map(el => {
         const { name, phone, id } = el;
