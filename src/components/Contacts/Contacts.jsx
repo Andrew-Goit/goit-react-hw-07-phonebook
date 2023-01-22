@@ -1,5 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteContacts } from 'redux/sliceContacts';
+import { useEffect } from 'react';
+import {
+  fetchContacts,
+  deleteContacts,
+  filterContacts,
+} from 'redux/operations';
+import { selectContacts, selectFilter } from 'redux/selectors';
 import {
   ContactList,
   ContactListItem,
@@ -9,27 +15,33 @@ import {
 } from './Contacts.styled';
 
 export const Contacts = () => {
-  let contacts = useSelector(state => state.contacts);
+  const { items, isLoading, error } = useSelector(selectContacts);
   const dispatch = useDispatch();
 
+  const filter = useSelector(selectFilter);
+
+  useEffect(() => {
+    if (filter === '') {
+      dispatch(fetchContacts());
+    } else {
+      dispatch(filterContacts(filter));
+    }
+  }, [dispatch, filter]);
+  
   const handleOnClick = evt => {
     dispatch(deleteContacts(evt.currentTarget.id));
   };
 
-  const filter = useSelector(state => state.filter.value);
-  if (filter !== '')
-    contacts = contacts.filter(contact => {
-      return contact.name.toLowerCase().includes(filter.toLowerCase());
-    });
-
   return (
     <ContactList>
-      {contacts.map(el => {
-        const { name, number, id } = el;
+      {isLoading && <b>Loading contacts...</b>}
+      {error && <b>{error}</b>}
+      {items.map(el => {
+        const { name, phone, id } = el;
         return (
           <ContactListItem key={id}>
             <ContactName>{name}</ContactName>
-            <ContactNumber>{number}</ContactNumber>
+            <ContactNumber>{phone}</ContactNumber>
             <DeleteButton id={id} type="button" onClick={handleOnClick}>
               Delete
             </DeleteButton>

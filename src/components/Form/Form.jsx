@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import { FormBox, Label, Input, SubmitBtn } from './Form.styled';
 import { useDispatch } from 'react-redux';
-import { addContacts } from 'redux/sliceContacts';
+import { addContacts } from 'redux/operations';
 
 export const Form = () => {
   const dispatch = useDispatch();
