@@ -10,17 +10,20 @@ export const Form = () => {
 
   const handleSubmit = evt => {
     evt.preventDefault();
-
     const form = evt.target;
+    
     if (items && items.length > 0) {
       items.forEach(({ name }) => {
         if (form.elements.name.value.toLowerCase() === name.toLowerCase()) {
           alert(`${name} is already in contacts`);
-          // form.reset();
+          form.reset();
+          return;
         }      
-      });
-      // return;
-    } 
+      });      
+    }
+    if (form.elements.name.value === "") {
+      return;
+    } else { 
     dispatch(
       addContacts({
         id: nanoid(),
@@ -29,6 +32,7 @@ export const Form = () => {
       })
     );
     form.reset();
+    }
   };
 
   return (
